@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Customer enquiry form for testing an n8n AI customer support webhook." />
+  <title>Customer Support | Enquiry Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Customer Support home">
+        <span class="brand-mark">CS</span>
+        <span><strong>Customer Support</strong><small>AI-assisted enquiry portal</small></span>
+      </a>
+      <span class="status-pill"><span class="status-dot"></span>Automation online</span>
+    </header>
+
+    <main class="main-content">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Fast, structured customer support</span>
+          <h1>How can we help you today?</h1>
+          <p>Submit your enquiry below. Our automation will classify the request, prepare a suitable response, and record it for support tracking.</p>
+
+          <div class="feature-grid">
+            <article><span class="feature-icon">01</span><div><h2>Smart classification</h2><p>Routes sales, support, billing, and general enquiries.</p></div></article>
+            <article><span class="feature-icon">02</span><div><h2>Structured logging</h2><p>Captures each request and AI analysis in Google Sheets.</p></div></article>
+            <article><span class="feature-icon">03</span><div><h2>Quick response</h2><p>Returns a clear acknowledgement after submission.</p></div></article>
+          </div>
+        </div>
+
+        <section class="form-card" aria-labelledby="form-title">
+          <div class="card-header">
+            <div><span class="card-kicker">Contact support</span><h2 id="form-title">Send an enquiry</h2></div>
+            <button id="loadSampleBtn" class="text-button" type="button">Load sample</button>
+          </div>
+
+          <form id="enquiryForm" novalidate>
+            <div class="field-row">
+              <div class="field-group">
+                <label for="customerName">Full name</label>
+                <input id="customerName" name="customer_name" type="text" autocomplete="name" placeholder="e.g. Ronald Amancio" required maxlength="100" />
+                <small class="field-error" data-error-for="customerName"></small>
+              </div>
+              <div class="field-group">
+                <label for="customerEmail">Email address</label>
+                <input id="customerEmail" name="customer_email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="160" />
+                <small class="field-error" data-error-for="customerEmail"></small>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="subject">Subject</label>
+              <input id="subject" name="subject" type="text" placeholder="What is your enquiry about?" required maxlength="160" />
+              <small class="field-error" data-error-for="subject"></small>
+            </div>
+
+            <div class="field-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="7" placeholder="Please provide enough detail for our team to understand your request." required minlength="10" maxlength="2500"></textarea>
+              <div class="field-meta"><small class="field-error" data-error-for="message"></small><small><span id="characterCount">0</span>/2500</small></div>
+            </div>
+
+            <div class="consent-row">
+              <input id="consent" type="checkbox" required />
+              <label for="consent">I agree that this information may be processed for support testing.</label>
+            </div>
+            <small class="field-error" data-error-for="consent"></small>
+
+            <button id="submitBtn" class="primary-button" type="submit"><span class="button-label">Submit enquiry</span><span class="button-spinner"></span></button>
+          </form>
+
+          <div id="resultPanel" class="result-panel" hidden aria-live="polite">
+            <div class="result-icon" id="resultIcon">✓</div>
+            <div><h3 id="resultTitle">Enquiry submitted</h3><p id="resultMessage"></p><details id="responseDetails"><summary>View webhook response</summary><pre id="responseOutput"></pre></details></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer><span>Demo customer enquiry portal</span><span>Powered by n8n automation</span></footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
