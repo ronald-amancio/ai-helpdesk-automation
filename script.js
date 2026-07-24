@@ -11,7 +11,7 @@ const resultIcon = document.getElementById("resultIcon");
 const resultTitle = document.getElementById("resultTitle");
 const resultMessage = document.getElementById("resultMessage");
 const responseOutput = document.getElementById("responseOutput");
-
+   
 const fields = {
   customerName: document.getElementById("customerName"),
   customerEmail: document.getElementById("customerEmail"),
