@@ -3,7 +3,7 @@ const WEBHOOK_URL = "https://n8n-ronsynt.onrender.com/webhook/customer-enquiry";
 
 const form = document.getElementById("enquiryForm");
 const submitBtn = document.getElementById("submitBtn");
-const buttonLabel = submitBtn.querySelector(".button-label");
+const buttonLabel = submitBtn.querySelector(".button-label");  
 const messageInput = document.getElementById("message");
 const characterCount = document.getElementById("characterCount");
 const resultPanel = document.getElementById("resultPanel");
