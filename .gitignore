@@ -1,0 +1,11 @@
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+.n8n/
+node_modules/
+*.log
