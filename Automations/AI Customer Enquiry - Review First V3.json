@@ -1,5 +1,5 @@
 {
-  "name": "AI Customer Enquiry - Review First V3 (Migration Candidate)",
+  "name": "AI Customer Enquiry - Review First V3 (Unverified)",
   "nodes": [
     {
       "parameters": {
@@ -257,6 +257,24 @@
               "name": "draft_reply",
               "value": "={{ $json.draft_reply }}",
               "type": "string"
+            },
+            {
+              "id": "v3-processing_status",
+              "name": "processing_status",
+              "value": "={{ $json.processing_status }}",
+              "type": "string"
+            },
+            {
+              "id": "v3-review_status",
+              "name": "review_status",
+              "value": "={{ $json.review_status }}",
+              "type": "string"
+            },
+            {
+              "id": "v3-sensitive",
+              "name": "sensitive",
+              "value": "={{ $json.sensitive }}",
+              "type": "boolean"
             }
           ]
         },
@@ -398,7 +416,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items=$input.all();\nreturn items.map(item=>{\n let obj;\n try{\n  obj=JSON.parse(String(item.json.text||'').replace(/^\\`\\`\\`(?:json)?/i,'').replace(/\\`\\`\\`$/,'').trim());\n }catch(e){obj={category:'Other',confidence:0,priority:'High',sentiment:'Neutral',summary:'AI response could not be parsed',reason:'Manual review required',draft_reply:''};}\n const allowed=['Sales','Support','Billing','Feedback','Other'];\n const conf=Number(obj.confidence);\n return {json:{category:allowed.includes(obj.category)?obj.category:'Other',confidence:Number.isFinite(conf)?Math.max(0,Math.min(100,conf)):0,priority:['Low','Medium','High'].includes(obj.priority)?obj.priority:'High',sentiment:['Positive','Neutral','Negative'].includes(obj.sentiment)?obj.sentiment:'Neutral',summary:String(obj.summary||'').slice(0,300),reason:String(obj.reason||'').slice(0,500),draft_reply:String(obj.draft_reply||'').slice(0,2000),processing_status:'success',processing_error:''}};});"
+        "jsCode": "const items=$input.all();\nreturn items.map(item=>{\n let obj,failed=false;\n try {\n   const raw=String(item.json.text||'').replace(/^\\x60\\x60\\x60(?:json)?/i,'').replace(/\\x60\\x60\\x60$/,'').trim();\n   obj=JSON.parse(raw);\n   if(!obj || typeof obj!=='object' || Array.isArray(obj)) throw Error('Invalid structure');\n   if(!['Sales','Support','Billing','Feedback','Other'].includes(obj.category))throw Error('Invalid category');\n   if(!Number.isFinite(Number(obj.confidence)))throw Error('Invalid confidence');\n } catch(e) {\n   failed=true;\n   obj={category:'Other',confidence:0,priority:'High',sentiment:'Neutral',summary:'AI analysis failed',reason:'Manual review required',draft_reply:''};\n }\n const category=obj.category;\n const sensitive=category==='Billing'||/password|credit card|card number|bank account|medical|private|confidential|refund|login|security|identity|personal data/i.test(String($('Enquiry').item.json.message||''));\n const confidence=Math.max(0,Math.min(100,Number(obj.confidence)||0));\n return {json:{\n category,confidence,\n priority:['Low','Medium','High'].includes(obj.priority)?obj.priority:'High',\n sentiment:['Positive','Neutral','Negative'].includes(obj.sentiment)?obj.sentiment:'Neutral',\n summary:String(obj.summary||'').slice(0,300),\n reason:String(obj.reason||'').slice(0,500),\n draft_reply:String(obj.draft_reply||'').slice(0,2000),\n processing_status:failed?'failed':'success',\n processing_error:failed?'Invalid AI output':'',\n sensitive,\n review_status:failed?'Manual Review - AI Failure':sensitive?'Manual Review - Sensitive':confidence<80?'Manual Review - Low Confidence':'Draft Ready for Human Review'\n }};});"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -507,7 +525,7 @@
             {
               "id": "review1",
               "name": "review_status",
-              "value": "Draft Ready for Human Review",
+              "value": "={{ $json.review_status }}",
               "type": "string"
             }
           ]
@@ -530,7 +548,7 @@
             {
               "id": "review2",
               "name": "review_status",
-              "value": "Human Review Required - Low Confidence",
+              "value": "={{ $json.review_status }}",
               "type": "string"
             }
           ]
