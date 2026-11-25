@@ -55,3 +55,9 @@ https://YOUR-USERNAME.github.io/REPOSITORY/customer-enquiry-demo/
 - If the browser shows a CORS error, allow your GitHub Pages origin in the n8n or proxy configuration.
 - Never put private API keys in frontend JavaScript because visitors can read the source.
 - For production, add server-side validation, spam protection, rate limiting, and an approval step rather than sending AI replies automatically.
+
+## Agent skill and review-first migration candidate
+
+This repository also includes a prospective Agensi agent skill in `SKILL.md`, an `AI-BRAIN.md` developer guide, and `docs/SECURITY.md`, `docs/TEST-PLAN.md`, and `docs/AGENSI-LISTING.md`. The original workflow remains unchanged. A sanitized migration candidate is `Automations/AI Customer Enquiry - Review First V3.json`.
+
+**Status:** These are development/review artifacts only. The V3 candidate has not been imported or end-to-end tested in n8n and is not production ready. The existing static page remains a demo; do not expose it to live customer data without a secured backend gateway and proper privacy controls. The Gmail review step is not a real draft creation action.
